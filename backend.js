@@ -5,15 +5,15 @@ const bodyParser = require('body-parser')
 const fs = require('fs') 
 const csv = require('csv-parser');
 const readXlsxFile = require('read-excel-file')
-const cors= require('cors')
+// const cors= require('cors')
 const path = require('path');
 const modelReview = require('./Model/model').schema
 const reviews = []
 
 //#region read data
-var text = fs.readFileSync('./Review_Dataset/food_dictionary.txt',(err,data)=>{
-  if(err) throw console.error();
-})
+// var text = fs.readFileSync('./Review_Dataset/food_dictionary.txt',(err,data)=>{
+//   if(err) throw console.error();
+// })
 
 fs.createReadStream('./Review_Dataset/test_file.csv')
 .pipe(csv(['reviewID','review']))
@@ -22,14 +22,14 @@ fs.createReadStream('./Review_Dataset/test_file.csv')
 
 })
 
-var textByLine = text.toString()
+// var textByLine = text.toString()
 //#endregion
 //#region set config
 app.use(express.static('public'));
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json())
-app.use(cors())
+// app.use(cors())
 
 app.use(function(err, req, res, next) {
   console.error(err.stack);
@@ -67,7 +67,7 @@ app.get('/reviews/:id', (req, res) => {
 
 
 })
-  app.get('/reviews', async (req, res) => {
+  app.get('/reviews',  (req, res) => {
   var query = req.query['query'].toString()
   console.log(query)
   var flag = false
