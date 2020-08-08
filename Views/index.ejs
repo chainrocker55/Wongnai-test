@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet" />
+  <link href="/css/main.css" rel="stylesheet" type="text/css" />
+  <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js"
+    asp-fallback-src="~/lib/jquery/dist/jquery.min.js" asp-fallback-test="window.jQuery" crossorigin="anonymous"
+    integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT">
+  </script>
+  <link ref="stylesheet" type="text/css" href="/public/SnackBar-master/dist/snackbar.min.css" />
+  <script src="/public/SnackBar-master/dist/snackbar.min.js"></script>
+</head>
+<style>
+  #snackbar {
+    visibility: hidden;
+    min-width: 250px;
+    margin-left: -125px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 2px;
+    padding: 16px;
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    bottom: 30px;
+    font-size: 17px;
+  }
+
+  #snackbar.show {
+    visibility: visible;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  }
+  #snackbar2 {
+    visibility: hidden;
+    min-width: 250px;
+    margin-left: -125px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 2px;
+    padding: 16px;
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    bottom: 30px;
+    font-size: 17px;
+  }
+
+  #snackbar2.show {
+    visibility: visible;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  }
+
+  @-webkit-keyframes fadein {
+    from {
+      bottom: 0;
+      opacity: 0;
+    }
+
+    to {
+      bottom: 30px;
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadein {
+    from {
+      bottom: 0;
+      opacity: 0;
+    }
+
+    to {
+      bottom: 30px;
+      opacity: 1;
+    }
+  }
+
+  @-webkit-keyframes fadeout {
+    from {
+      bottom: 30px;
+      opacity: 1;
+    }
+
+    to {
+      bottom: 0;
+      opacity: 0;
+    }
+  }
+
+  @keyframes fadeout {
+    from {
+      bottom: 30px;
+      opacity: 1;
+    }
+
+    to {
+      bottom: 0;
+      opacity: 0;
+    }
+  }
+</style>
+
+<body>
+  <div class="s01" id="criteria">
+    <form>
+      <fieldset>
+        <legend>Wongnai.com</legend>
+      </fieldset>
+      <div class="inner-form">
+        <div class="input-field first-wrap">
+          <input id="keyword"  type="text" placeholder="What are you looking for?" />
+        </div>
+
+        <div class="input-field third-wrap">
+          <button  class="btn-search" id="btn-search1"  type="button" onclick=" getReviewByKeyWord() ">Search</button>
+        </div>
+      </div>
+      <div class="inner-form">
+
+        <div class="input-field first-wrap">
+          <input id="reviewID" type="text" placeholder="Search By ID" />
+        </div>
+        <div class="input-field third-wrap">
+          <button class="btn-search" id="btn-search2" type="button" onclick="getReviewByID()">Search</button>
+        </div>
+      </div>
+    </form>
+
+  </div>
+  <div class="s01" id="result">
+    <form>
+      <fieldset>
+        <legend>Review</legend>
+      </fieldset>
+      <div class="">
+        <textarea id="contentReview" class="contentReview" cols="40" rows="25" type="text" placeholder=""></textarea>
+        <input hidden id="IDreview" value="" />
+      </div>
+      <div class="" style="display: flex;">
+
+        <div class="input-field third-wrap">
+          <button class="btn-result" style="padding: 10px; width: 100px;" type="button" onclick="">Back</button>
+        </div>
+        <div class="input-field third-wrap">
+          <button class="btn-save" style="padding: 10px;width: 100px;" type="button"
+            onclick=" setReviewByID()">Save</button>
+        </div>
+      </div>
+      <div id="snackbar">Success</div>
+      <div id="snackbar2">You can't save more review</div>
+    </form>
+
+  </div>
+
+  <script type="text/javascript">
+    $("#btn-search1").click(function () {
+      var keyword = $("#keyword").val()
+      if (keyword == "") {
+        document.getElementById("contentReview").value = null
+        return
+      }
+      $([document.documentElement, document.body]).animate({
+        scrollTop: $("#result").offset().top
+      }, 1000);
+    });
+    $("#btn-search2").click(function () {
+      var id = $("#reviewID").val()
+      if (id == "") {
+        document.getElementById("contentReview").value = null
+        return
+      }
+      $([document.documentElement, document.body]).animate({
+        scrollTop: $("#result").offset().top
+      }, 1000);
+    });
+    $(".btn-result").click(function () {
+      $([document.documentElement, document.body]).animate({
+        scrollTop: $("#criteria").offset().top
+      }, 1000);
+    });
+
+    function isEmpty(obj) {
+      return Object.keys(obj).length === 0;
+    }
+
+    function setReviewByID() {
+      var id = $("#reviewID").val()
+      var content = document.getElementById("contentReview").value
+      if(id==""||id==null){
+        var x = document.getElementById("snackbar2");
+            x.className = "show";
+            setTimeout(function () {
+              x.className = x.className.replace("show", "");
+            }, 3000);
+        return
+      }
+      console.log(id)
+      console.log(content)
+      $.ajax({
+
+        url: "http://localhost:5555/reviews/" + id,
+
+        method: 'PUT',
+        data: {
+          'text': content
+        },
+        credentials: 'same-origin',
+        success: function (res) {
+          if (res) {
+            var x = document.getElementById("snackbar");
+            x.className = "show";
+            setTimeout(function () {
+              x.className = x.className.replace("show", "");
+            }, 3000);
+          } else {
+
+          }
+
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+
+          console.log(jqXHR.status);
+          console.log(textStatus);
+          console.log(errorThrown);
+        }
+      });
+    }
+    function getReviewByKeyWord() {
+      var keyword = $("#keyword").val()
+      if(keyword==""||keyword==null){
+        return
+      }
+
+      $.ajax({
+
+        url: "http://localhost:5555/reviews/?query=" + keyword,
+
+        method: 'GET',
+        credentials: 'same-origin',
+        success: function (res) {
+          if (res) {
+            console.log(res)
+            document.getElementById("IDreview").val = null     
+            if (res != 0) {
+              for(var i =0;i<res.length;i++){
+                document.getElementById("contentReview").value += "Review : " +i+ "\n" + JSON.stringify(res[i].review) + 
+                "\n\n"+"*".repeat(145)+"\n\n"
+              }
+
+            } else
+              document.getElementById("contentReview").value = "There isn't review!"
+          } else {
+            document.getElementById("contentReview").value = "There isn't review!"
+          }
+
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+
+          console.log(jqXHR.status);
+          console.log(textStatus);
+          console.log(errorThrown);
+        }
+      });
+    }
+
+
+    function getReviewByID() {
+      var id = $("#reviewID").val()
+
+      $.ajax({
+
+        url: "http://localhost:5555/reviews/" + id,
+
+        method: 'GET',
+        credentials: 'same-origin',
+        success: function (res) {
+          if (res) {
+            console.log(res)
+
+            if (res != "Not Found!") {
+              document.getElementById("contentReview").value = JSON.stringify(res.review.toString())
+              document.getElementById("IDreview").val = JSON.stringify(res.reviewID.toString())
+            } else
+              document.getElementById("contentReview").value = "Not Found!"
+          } else {
+            document.getElementById("contentReview").value = "Not Found!"
+          }
+
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+
+          console.log(jqXHR.status);
+          console.log(textStatus);
+          console.log(errorThrown);
+        }
+      });
+    }
+  </script>
+</body><!-- This templates was made by Colorlib (https://colorlib.com) -->
+
+</html>
